@@ -4,7 +4,7 @@ import "./App.css";
 // import Parent from "./parent";
 // import Count from "./count";
 // import Boolean from "./Boolean";
-// import Input from "./input";
+// import Inputs from "./input";
 
 // const name = "Developer";
 
@@ -63,7 +63,7 @@ import "./App.css";
 }
 
 // function App() {
-//   const [Input, setInput] = useState("hello");
+//   const [Inputs, setInput] = useState("hello");
 //   const type = (event) => {
 //     setInput(event.target.value);
 //     // let a = event.target.value;
@@ -75,24 +75,85 @@ import "./App.css";
 //   };
 //   return (
 //     <div>
-//       <h1>{Input}</h1>
+//       <h1>{Inputs}</h1>
 //       <input type="text" onChange={type}></input>
 //       <button onClick={reset}>Reset</button>
 //     </div>
 //   );
 // }
+// function App() {
+//   const todolist = [
+//     { id: 1, task: "go shopping" },
+//     { id: 2, task: "play games" },
+//   ];
+//   return (
+//     <div>
+//       {/* <Inputs /> */}
+//       {todolist.map((item) => (
+//         <p key={item.id}>{item.task}</p>
+//       ))}
+//     </div>
+//   );
+// }
+
 function App() {
-  const todo = [
-    { id: 1, task: "go shopping" },
-    { id: 2, task: "play games" },
-  ];
+  const [todolist, setTodolist] = useState([]);
+  const [input, setInput] = useState("");
+  const type = (event) => {
+    setInput(event.target.value);
+    console.log(event.target.value);
+  };
+
+  const reset = () => {
+    setInput("");
+  };
+
+  const addTodo = () => {
+    if (input.trim() !== "") {
+      setTodolist([...todolist, input]);
+      setInput("");
+    }
+  };
+  const deletes = () => {
+    setTodolist((prev) => prev.slice(0, -1));
+  };
+  const resetall = () => {
+    setTodolist([]);
+  };
   return (
     <div>
-      {/* <Input /> */}
-      {todo.map((item) => (
-        <p key={item.id}>{item.task}</p>
-      ))}
+      <h1>To-Do List</h1>
+      <ol>
+        {todolist.map((item, index) => (
+          <li key={index}>{item}</li>
+        ))}
+      </ol>
+      {/* <Inputs
+        input={input}
+        type={type}
+        reset={reset}
+        resetall={resetall}
+        addTodo={addTodo}
+        deletes={deletes}
+      /> */}
+      <input type="text" value={input} onChange={type} />
+      <button onClick={addTodo}>Add To-Do</button>
+      <button onClick={reset}>Reset</button>
+      <button onClick={resetall}>Delete all</button>
+      <button onClick={deletes}>Delete last item</button>
     </div>
   );
 }
+
+// const Inputs = ({ input, type, reset, addTodo, resetall, deletes }) => {
+//   return (
+//     <div>
+//       <input type="text" value={input} onChange={type} />
+//       <button onClick={addTodo}>Add To-Do</button>
+//       <button onClick={reset}>Reset</button>
+//       <button onClick={resetall}>Delete all</button>
+//       <button onClick={deletes}>Delete last item</button>
+//     </div>
+//   );
+// };
 export default App;
