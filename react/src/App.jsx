@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 // import ItemList from "./itemfile";
 // import Parent from "./parent";
-// import Count from "./count";
+import Count from "./count";
 // import Boolean from "./Boolean";
 // import Inputs from "./input";
 
@@ -96,58 +96,46 @@ import "./App.css";
 //   );
 // }
 
-function App() {
-  const [todolist, setTodolist] = useState([]);
-  const [input, setInput] = useState("");
-  const type = (event) => {
-    setInput(event.target.value);
-    console.log(event.target.value);
-  };
+// function App() {
+//   const [todolist, setTodolist] = useState([]);
+//   const [input, setInput] = useState("");
+//   const type = (event) => {
+//     setInput(event.target.value);
+//     console.log(event.target.value);
+//   };
 
-  const reset = () => {
-    setInput("");
-  };
+//   const reset = () => {
+//     setInput("");
+//   };
 
-  const addTodo = () => {
-    if (input.trim() !== "") {
-      setTodolist([...todolist, input]);
-      setInput("");
-    }
-  };
-  const deletes = () => {
-    setTodolist((prev) => prev.slice(0, -1));
-  };
-  const resetall = () => {
-    setTodolist([]);
-  };
-  return (
-    <div>
-      <h1>To-Do List</h1>
-      <ol>
-        {todolist.map((item, index) => (
-          <li key={index}>{item}</li>
-        ))}
-      </ol>
-      {/* <Inputs
-        input={input}
-        type={type}
-        reset={reset}
-        resetall={resetall}
-        addTodo={addTodo}
-        deletes={deletes}
-      /> */}
-      <input type="text" value={input} onChange={type} />
-      <button onClick={addTodo}>Add To-Do</button>
-      <button onClick={reset}>Reset</button>
-      <button onClick={resetall}>Delete all</button>
-      <button onClick={deletes}>Delete last item</button>
-    </div>
-  );
-}
-
-// const Inputs = ({ input, type, reset, addTodo, resetall, deletes }) => {
+//   const addTodo = () => {
+//     if (input.trim() !== "") {
+//       setTodolist([...todolist, input]);
+//       setInput("");
+//     }
+//   };
+//   const deletes = () => {
+//     setTodolist((prev) => prev.slice(0, -1));
+//   };
+//   const resetall = () => {
+//     setTodolist([]);
+//   };
 //   return (
 //     <div>
+//       <h1>To-Do List</h1>
+//       <ol>
+//         {todolist.map((item, index) => (
+//           <li key={index}>{item}</li>
+//         ))}
+//       </ol>
+//       {/* <Inputs
+//         input={input}
+//         type={type}
+//         reset={reset}
+//         resetall={resetall}
+//         addTodo={addTodo}
+//         deletes={deletes}
+//       /> */}
 //       <input type="text" value={input} onChange={type} />
 //       <button onClick={addTodo}>Add To-Do</button>
 //       <button onClick={reset}>Reset</button>
@@ -155,5 +143,70 @@ function App() {
 //       <button onClick={deletes}>Delete last item</button>
 //     </div>
 //   );
-// };
+// }
+
+// // const Inputs = ({ input, type, reset, addTodo, resetall, deletes }) => {
+// //   return (
+// //     <div>
+// //       <input type="text" value={input} onChange={type} />
+// //       <button onClick={addTodo}>Add To-Do</button>
+// //       <button onClick={reset}>Reset</button>
+// //       <button onClick={resetall}>Delete all</button>
+// //       <button onClick={deletes}>Delete last item</button>
+// //     </div>
+// //   );
+// // };
+// export default App;
+
+function App() {
+  const [quotes, setQuotes] = useState([]);
+  const [character, setCharacter] = useState("");
+
+  const fetchData = async () => {
+    const response = await fetch(
+      `https://yurippe.vercel.app/api/quotes?character=${encodeURIComponent(
+        character
+      )}&random=3`
+    );
+    const data = await response.json();
+    setQuotes(data);
+    console.log(data);
+  };
+  const handleChange = (e) => {
+    setCharacter(e.target.value);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      fetchData(); // only fetch when Enter is pressed
+    }
+  };
+  // useEffect(() => {
+  //   fetchData();
+  // }, [character]);
+  // const handleChange = (e) => {
+  //   setCharacter(e.target.value);
+  // };
+  return (
+    <div>
+      <h1>Quotes</h1>
+      <input
+        type="text"
+        value={character}
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+        placeholder="Enter character name"
+      />
+      <ol>
+        {quotes.map((quote, index) => (
+          <li key={index}>{quote.quote}</li>
+        ))}
+      </ol>
+      <button onClick={fetchData}>Get Quote</button>
+
+      <Count />
+    </div>
+  );
+}
+
 export default App;
