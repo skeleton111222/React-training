@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./App.css";
+import { FaGithub } from "react-icons/fa";
 // import ItemList from "./itemfile";
 // import Parent from "./parent";
 // import Count from "./count";
@@ -234,6 +235,7 @@ function App() {
           </li>
         ))}
       </ul>
+      <FaGithub />
     </div>
   );
 }
