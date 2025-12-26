@@ -96,58 +96,47 @@ import "./App.css";
 //   );
 // }
 
-function App() {
-  const [todolist, setTodolist] = useState([]);
-  const [input, setInput] = useState("");
-  const type = (event) => {
-    setInput(event.target.value);
-    console.log(event.target.value);
-  };
+// function App() {
+//   const [todolist, setTodolist] = useState([]);
+//   const [input, setInput] = useState("");
+//   const type = (event) => {
+//     setInput(event.target.value);
+//     console.log(event.target.value);
+//   };
 
-  const reset = () => {
-    setInput("");
-  };
+//   const reset = () => {
+//     setInput("");
+//   };
 
-  const addTodo = () => {
-    if (input.trim() !== "") {
-      setTodolist([...todolist, input]);
-      setInput("");
-    }
-  };
-  const deletes = () => {
-    setTodolist((prev) => prev.slice(0, -1));
-  };
-  const resetall = () => {
-    setTodolist([]);
-  };
-  return (
-    <div>
-      <h1>To-Do List</h1>
-      <ol>
-        {todolist.map((item, index) => (
-          <li key={index}>{item}</li>
-        ))}
-      </ol>
-      {/* <Inputs
-        input={input}
-        type={type}
-        reset={reset}
-        resetall={resetall}
-        addTodo={addTodo}
-        deletes={deletes}
-      /> */}
-      <input type="text" value={input} onChange={type} />
-      <button onClick={addTodo}>Add To-Do</button>
-      <button onClick={reset}>Reset</button>
-      <button onClick={resetall}>Delete all</button>
-      <button onClick={deletes}>Delete last item</button>
-    </div>
-  );
-}
-
-// const Inputs = ({ input, type, reset, addTodo, resetall, deletes }) => {
+//   const addTodo = () => {
+//     if (input.trim() !== "") {
+//       setTodolist([...todolist, input]);
+//       setInput("");
+//     }
+//   };
+//   const deletes = () => {
+//     setTodolist((prev) => prev.slice(0, -1));
+//   };
+//   const resetall = () => {
+//     setTodolist([]);
+//   };
 //   return (
 //     <div>
+//       <h1>To-Do List</h1>
+//       <ol>
+//         {todolist.map((item, index) => (
+//           <li key={index}>{item}</li>
+//         ))}
+//         <button>Delete last item</button>
+//       </ol>
+//       {/* <Inputs
+//         input={input}
+//         type={type}
+//         reset={reset}
+//         resetall={resetall}
+//         addTodo={addTodo}
+//         deletes={deletes}
+//       /> */}
 //       <input type="text" value={input} onChange={type} />
 //       <button onClick={addTodo}>Add To-Do</button>
 //       <button onClick={reset}>Reset</button>
@@ -155,5 +144,98 @@ function App() {
 //       <button onClick={deletes}>Delete last item</button>
 //     </div>
 //   );
-// };
+// }
+
+// // const Inputs = ({ input, type, reset, addTodo, resetall, deletes }) => {
+// //   return (
+// //     <div>
+// //       <input type="text" value={input} onChange={type} />
+// //       <button onClick={addTodo}>Add To-Do</button>
+// //       <button onClick={reset}>Reset</button>
+// //       <button onClick={resetall}>Delete all</button>
+// //       <button onClick={deletes}>Delete last item</button>
+// //     </div>
+// //   );
+// // };
+// export default App;
+
+// import { useState } from 'react'
+// import './App.css'
+
+// function App() {
+// 	const [todoList, setTodoList] = useState([])
+// 	const [input, setInput] = useState('')
+
+// 	const handleAdd = () => {
+// 		if (!input) {
+// 			return
+// 		}
+// 		setTodoList([...todoList, input])
+// 		setInput('')
+// 	}
+
+// 	console.log(todoList)
+// 	return (
+// 		<>
+// 			<input
+// 				value={input}
+// 				placeholder='Enter todo list'
+// 				onChange={e => setInput(e.target.value)}
+// 			/>
+// 			<button onClick={handleAdd}>Add</button>
+
+// 			<ul>
+// 				{todoList.map((todo, index) => (
+// 					<li key={index}>
+// 						{todo}
+// 						<button>Delete</button>
+// 					</li>
+// 				))}
+// 			</ul>
+// 		</>
+// 	)
+// }
+
+// export default App
+
+function App() {
+  const [todoList, setTodoList] = useState([]);
+  const [input, setInput] = useState("");
+
+  const handleAdd = () => {
+    if (!input) {
+      return;
+    }
+    setTodoList([...todoList, input]);
+    setInput("");
+  };
+
+  // const handleDelete = (todoToDelete) => {
+  //   setTodoList(todoList.filter((todo) => todo !== todoToDelete));
+  // };
+  const handleDelete = (indexToDelete) => {
+    setTodoList(todoList.filter((_, index) => index !== indexToDelete));
+  };
+  console.log(todoList);
+  return (
+    <div>
+      <input
+        value={input}
+        placeholder="Enter todo list"
+        onChange={(e) => setInput(e.target.value)}
+      />
+      <button onClick={handleAdd}>Add</button>
+
+      <ul>
+        {todoList.map((todo, index) => (
+          <li key={index}>
+            {todo}
+            <button onClick={() => handleDelete(index)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 export default App;
