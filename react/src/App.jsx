@@ -158,53 +158,207 @@ import Count from "./count";
 // // };
 // export default App;
 
+// function App() {
+//   const [quotes, setQuotes] = useState([]);
+//   const [character, setCharacter] = useState("");
+//   const fetchData = async () => {
+//     const response = await fetch(
+//       `https://yurippe.vercel.app/api/quotes?character=${encodeURIComponent(
+//         character
+//       )}&random=3`
+//     );
+//     const data = await response.json();
+//     setQuotes(data);
+//     console.log(data);
+//   };
+//   const handleChange = (e) => {
+//     setCharacter(e.target.value);
+//   };
+
+//   const handleKeyDown = (e) => {
+//     if (e.key === "Enter") {
+//       fetchData(); // only fetch when Enter is pressed
+//     }
+//   };
+//   // useEffect(() => {
+//   //   fetchData();
+//   // }, [character]);
+//   // const handleChange = (e) => {
+//   //   setCharacter(e.target.value);
+//   // };
+//   return (
+//     <div>
+//       <h1>Quotes</h1>
+//       <input
+//         type="text"
+//         value={character}
+//         onChange={handleChange}
+//         onKeyDown={handleKeyDown}
+//         placeholder="Enter character name"
+//       />
+//       <ol>
+//         {quotes.map((quote, index) => (
+//           <li key={index}>{quote.quote}</li>
+//         ))}
+//       </ol>
+//       <button onClick={fetchData}>Get Quote</button>
+
+//       <Count />
+//     </div>
+//   );
+// }
+
+// export default App;
+
+// function App() {
+//   const [quotes, setQuotes] = useState([]);
+//   const [character, setCharacter] = useState("");
+//   const [loading, setLoading] = useState(false);
+//   const [error, setError] = useState(null);
+
+//   const fetchData = async (e) => {
+//     e.preventDefault();
+//     setLoading(true);
+//     setError(null);
+
+//     try {
+//       const response = await fetch(
+//         `https://yurippe.vercel.app/api/quotes?character=${encodeURIComponent(
+//           character
+//         )}&random=3`
+//       );
+//       if (!response.ok) {
+//         throw new Error("Failed to fetch quotes");
+//       }
+//       const data = await response.json();
+//       setQuotes(data);
+//     } catch (error) {
+//       setError(error.message);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   const handleChange = (e) => {
+//     setCharacter(e.target.value);
+//   };
+
+//   return (
+//     <div>
+//       <h1>Quotes</h1>
+//       <form onSubmit={fetchData}>
+//         <input
+//           type="text"
+//           value={character}
+//           onChange={handleChange}
+//           placeholder="Enter character name"
+//         />
+//         <button type="submit" disabled={loading}>
+//           {loading ? "Loading..." : "Get Quotes"}{" "}
+//         </button>
+//       </form>
+//       {error && <p style={{ color: "red" }}>{error}</p>}{" "}
+//       <ol>
+//         {quotes.map((quote, index) => (
+//           <li key={index}>{quote.quote}</li>
+//         ))}
+//       </ol>
+//     </div>
+//   );
+// }
+
+// export default App;
 function App() {
   const [quotes, setQuotes] = useState([]);
   const [character, setCharacter] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const fetchData = async () => {
-    const response = await fetch(
-      `https://yurippe.vercel.app/api/quotes?character=${encodeURIComponent(
-        character
-      )}&random=3`
-    );
-    const data = await response.json();
-    setQuotes(data);
-    console.log(data);
+  const fetchData = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(
+        `https://yurippe.vercel.app/api/quotes?character=${encodeURIComponent(
+          character
+        )}&random=3`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch quotes");
+      }
+
+      const data = await response.json();
+      setQuotes(data);
+    } catch (err) {
+      setError(err.message);
+      setQuotes([]);
+    } finally {
+      setLoading(false);
+    }
   };
+
   const handleChange = (e) => {
     setCharacter(e.target.value);
   };
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      setError(null);
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      fetchData(); // only fetch when Enter is pressed
-    }
-  };
-  // useEffect(() => {
-  //   fetchData();
-  // }, [character]);
-  // const handleChange = (e) => {
-  //   setCharacter(e.target.value);
-  // };
+      try {
+        const response = await fetch(
+          `https://yurippe.vercel.app/api/quotes?random=3`
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to load initial data");
+        }
+
+        const data = await response.json();
+        setQuotes(data);
+      } catch (err) {
+        setError(err.message);
+        setQuotes([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
+
   return (
     <div>
       <h1>Quotes</h1>
-      <input
-        type="text"
-        value={character}
-        onChange={handleChange}
-        onKeyDown={handleKeyDown}
-        placeholder="Enter character name"
-      />
-      <ol>
-        {quotes.map((quote, index) => (
-          <li key={index}>{quote.quote}</li>
-        ))}
-      </ol>
-      <button onClick={fetchData}>Get Quote</button>
 
-      <Count />
+      {loading ? (
+        <div className="loading-message">Loading...</div>
+      ) : (
+        <div>
+          <form onSubmit={fetchData}>
+            <input
+              type="text"
+              value={character}
+              onChange={handleChange}
+              placeholder="Enter character name"
+            />
+            <button type="submit" disabled={loading}>
+              {loading ? "Loading..." : "Get Quotes"}
+            </button>
+          </form>
+
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          {quotes.length > 0 && (
+            <ol>
+              {quotes.map((quote, index) => (
+                <li key={index}>{quote.quote}</li>
+              ))}
+            </ol>
+          )}
+        </div>
+      )}
     </div>
   );
 }
